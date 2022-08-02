@@ -3,14 +3,15 @@ package datastore
 import (
 	"context"
 	"fmt"
-	"log"
 
+	"github.com/joaquinicolas/iris-bot/src/domain/entities"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 )
 
 type Store interface {
 	Connect(ctx context.Context) error
+	Get(sheetId string, readRange string) any
 }
 
 type GsheetProvider struct {
@@ -33,22 +34,51 @@ func (s *GsheetProvider) Connect(ctx context.Context) error {
 	return nil
 }
 
-func (gp *GsheetProvider) Get(sheetId string) {
-	readRange := "PRECIOS TOTALES!A3:O"
+func (gp *GsheetProvider) Get(sheetId string, readRange string) ([]entities.Product, error) {
+	//readRange := "PRECIOS TOTALES!A3:O80"
+	var products = make([]entities.Product, 0)
 	resp, err := gp.service.Spreadsheets.Values.Get(sheetId, readRange).Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet: %v", err)
+		return nil, fmt.Errorf("unable to retrieve data from sheet: %v", err)
 	}
 
 	if len(resp.Values) == 0 {
-		fmt.Println("No data found.")
+		return nil, fmt.Errorf("no data found")
 	} else {
-		fmt.Println("Item, Nombre, Precio:")
 		for _, row := range resp.Values {
-			// Print columns A and E, which correspond to indices 0 and 4.
-			fmt.Printf("%s, %s, %s\n", row[0], row[1], row[2])
+			if row[0] != "" {
+				products = append(products, entities.Product{
+					Id:    fmt.Sprintf("%v", row[0]),
+					Price: fmt.Sprintf("%v", row[2]),
+					Name:  fmt.Sprintf("%v", row[1]),
+				})
+			}
+
+			if row[4] != "" {
+				products = append(products, entities.Product{
+					Id:    fmt.Sprintf("%v", row[4]),
+					Price: fmt.Sprintf("%v", row[6]),
+					Name:  fmt.Sprintf("%v", row[5]),
+				})
+			}
+
+			if row[8] != "" {
+				products = append(products, entities.Product{
+					Id:    fmt.Sprintf("%v", row[8]),
+					Price: fmt.Sprintf("%v", row[10]),
+					Name:  fmt.Sprintf("%v", row[9]),
+				})
+			}
+
+			if row[12] != "" {
+				products = append(products, entities.Product{
+					Id:    fmt.Sprintf("%v", row[12]),
+					Price: fmt.Sprintf("%v", row[14]),
+					Name:  fmt.Sprintf("%v", row[13]),
+				})
+			}
 		}
 	}
-}
 
-// Range: A2:O73
+	return products, nil
+}

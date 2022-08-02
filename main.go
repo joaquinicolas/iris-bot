@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/joaquinicolas/iris-bot/src/infrastructure/datastore"
 )
@@ -27,5 +28,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	gsheet.Get("1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg")
+	data, err := gsheet.Get("1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg", "PRECIOS TOTALES!A3:O90")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(data)
 }
