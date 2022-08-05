@@ -11,7 +11,7 @@ import (
 
 type Store interface {
 	Connect(ctx context.Context) error
-	Get(sheetId string, readRange string) any
+	Get(sheetId string, readRange string) ([]entities.Product, error)
 }
 
 type GsheetProvider struct {
