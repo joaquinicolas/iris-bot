@@ -35,6 +35,8 @@ func (tr *TelegramRouter) Register() {
 	tr.tb.bot.AddHandler(".*", func(u *objs.Update) {
 		tr.getProductsByTerm(u)
 	}, "all")
+
+	//go tr.inlineQuery()
 }
 
 func (tr *TelegramRouter) start(u *objs.Update) {
@@ -61,5 +63,35 @@ func (tr *TelegramRouter) getProductsByTerm(u *objs.Update) {
 	_, err = tr.tb.bot.SendMessage(u.Message.Chat.Id, text, "html", u.Message.MessageId, false, false)
 	if err != nil {
 		fmt.Println(err)
+	}
+}
+
+func (tr *TelegramRouter) inlineQuery() {
+	bot := tr.tb.bot
+	presenter := tr.telegramPresenter
+	inlineQueryChannel, _ := bot.AdvancedMode().RegisterChannel("", "inline_query")
+	for in := range *inlineQueryChannel {
+
+		iqs := bot.AdvancedMode().AAnswerInlineQuery(in.InlineQuery.Id, 0, false, "", "", "")
+		products, err := tr.botInteractor.GetProductsByTerm(context.Background(), in.InlineQuery.Query)
+		fmt.Println(products)
+		fmt.Println(in.InlineQuery.Query)
+		if err != nil {
+			fmt.Println(err)
+		}
+		text, _ := presenter.RespondWithProducts(products)
+		fmt.Println(text)
+		_ = iqs.CreateTextMessage(
+			"testest",
+			"",
+			nil,
+			false,
+		)
+
+		_, err = iqs.Send()
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
