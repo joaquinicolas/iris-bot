@@ -7,7 +7,7 @@ import (
 )
 
 type BotRepository interface {
-	GetProducts(ctx context.Context, term string) ([]entities.Product, error)
+	GetProducts(ctx context.Context) ([]entities.Product, error)
 }
 
 
