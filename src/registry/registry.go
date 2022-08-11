@@ -2,6 +2,7 @@ package registry
 
 import (
 	"context"
+	"os"
 
 	"github.com/joaquinicolas/iris-bot/src/infrastructure/api"
 	"github.com/joaquinicolas/iris-bot/src/infrastructure/datastore"
@@ -22,7 +23,7 @@ type Registry interface {
 func (r *registry) Bootstrap() {
 	botRepository := repository.NewBotRepository(r.store)
 	service := interactor.NewBotInteractor(botRepository)
-	telegramBot := api.NewTelegramBot("5473899125:AAHRn8jEWfjk1vNJDuwYL9AiKWRUTHXGeBM")
+	telegramBot := api.NewTelegramBot(os.Getenv("TELEGRAM_TOKEN"))
 	presenter := presenter.NewBotPresenter(context.Background())
 	telegramRouter := api.NewTelegramRouter(telegramBot, service, presenter)
 	telegramBot.Run()

@@ -1,19 +1,20 @@
 package main
 
 import (
+	"os"
+
 	"github.com/joaquinicolas/iris-bot/src/infrastructure/datastore"
 	"github.com/joaquinicolas/iris-bot/src/registry"
-)
-
-const (
-	gsheetToken = "AIzaSyB05LD8IrWbvmQLR6a0dUicsoePnGirsH8"
-	telegramToken = "5473899125:AAHRn8jEWfjk1vNJDuwYL9AiKWRUTHXGeBM"
-	sheetId = "1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg"
-	sheetRange = "PRECIOS TOTALES!A3:O90"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	gsheet := datastore.NewGsheetProvider(gsheetToken)
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+	gsheet := datastore.NewGsheetProvider(os.Getenv("GSHEET_TOKEN"))
 	ch := make(chan bool)
 	container := registry.NewRegistry(gsheet)
 	container.Bootstrap()
