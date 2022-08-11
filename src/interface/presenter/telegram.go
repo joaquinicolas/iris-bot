@@ -17,11 +17,11 @@ type botPresenter struct {
 // RespondWithProducts implements BotPresenter
 func (*botPresenter) RespondWithProducts(products []entities.Product) (string, int) {
 	// concatenate the products into a string
-	var productsString string
+	var productsString string = `Se han encontrado los siguientes productos:`
 	var counter int
 	for _, product := range products {
 		counter++
-		productsString += fmt.Sprintf("%d. %s:%s\n", counter, product.Name, product.Price)
+		productsString += fmt.Sprintf("\n<b>%d.</b> %s: <b>%s</b>", counter, product.Name, product.Price)
 	}
 
 	return productsString, counter

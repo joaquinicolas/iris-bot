@@ -35,5 +35,5 @@ func (br *botRepository) GetProducts(ctx context.Context) ([]entities.Product, e
 }
 
 func getConfig() (string, string) {
-	return "5473899125:AAHRn8jEWfjk1vNJDuwYL9AiKWRUTHXGeBM", "1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg"
+	return "PRECIOS TOTALES!A3:O122", "1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg"
 }

@@ -44,7 +44,7 @@ func (bi *botInteractor) GetProductsByTerm(ctx context.Context, term string) ([]
 }
 
 func filterByTerm[T entities.Filter](list []T, term string) []T {
-	r, _ := regexp.Compile(fmt.Sprintf("[a-zA-Z]*\\s*%s\\s*[a-zA-Z]*", term))
+	r, _ := regexp.Compile(fmt.Sprintf("(?i)[a-zA-Z]*\\s*%s\\s*[a-zA-Z]*", term))
 	filtered := make([]T, 0)
 	for _, v := range list {
 		if r.MatchString(v.Tag()) {
