@@ -1,37 +1,21 @@
 package main
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/joaquinicolas/iris-bot/src/infrastructure/datastore"
+	"github.com/joaquinicolas/iris-bot/src/registry"
+)
+
+const (
+	gsheetToken = "AIzaSyB05LD8IrWbvmQLR6a0dUicsoePnGirsH8"
+	telegramToken = "5473899125:AAHRn8jEWfjk1vNJDuwYL9AiKWRUTHXGeBM"
+	sheetId = "1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg"
+	sheetRange = "PRECIOS TOTALES!A3:O90"
 )
 
 func main() {
-	/*token := "5473899125:AAHRn8jEWfjk1vNJDuwYL9AiKWRUTHXGeBM"
-	bot := api.NewTelegramBot(token)
-	err := bot.Run()
+	gsheet := datastore.NewGsheetProvider(gsheetToken)
 	ch := make(chan bool)
-	if err != nil {
-		panic(err)
-	}
-
-	api.NewRouter(bot)
+	container := registry.NewRegistry(gsheet)
+	container.Bootstrap()
 	<-ch
-
-	1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg
-
-	*/
-
-	gsheet := datastore.NewGsheetProvider("AIzaSyB05LD8IrWbvmQLR6a0dUicsoePnGirsH8")
-	err := gsheet.Connect(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	data, err := gsheet.Get("1x3UNLdLbmnl0d65fEmH2us4Xj15Xj9ZQ-UNM5SXFVDg", "PRECIOS TOTALES!A3:O90")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(data)
 }
