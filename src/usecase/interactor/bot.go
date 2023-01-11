@@ -2,7 +2,6 @@ package interactor
 
 import (
 	"context"
-	"math"
 
 	"github.com/joaquinicolas/iris-bot/src/domain/entities"
 	"github.com/joaquinicolas/iris-bot/src/usecase/repository"
@@ -42,8 +41,8 @@ func (bi *botInteractor) GetProductsByTerm(ctx context.Context, term string) ([]
 func filterByTerm[T entities.Filter](list []T, term string) []T {
 	filtered := make([]T, 0)
 	for _, v := range list {
-		result := longestCommonSubsequence(v.Tag(), term)
-		if len(result) > 4 {
+		result := lcsubStr(v.Tag(), term)
+		if len(result) > 3 {
 			filtered = append(filtered, v)
 		}
 	}
@@ -51,32 +50,30 @@ func filterByTerm[T entities.Filter](list []T, term string) []T {
 	return filtered
 }
 
-func longestCommonSubsequence(str1, str2 string) string {
-	table := make([][]int, len(str1)+1)
+func lcsubStr(a, b string) string {
+	m := len(a)
+	n := len(b)
+
+	table := make([][]int, m+1)
 	for i := range table {
-		table[i] = make([]int, len(str2)+1)
+		table[i] = make([]int, n+1)
 	}
-	for i := 0; i < len(str1); i++ {
-		for j := 0; j < len(str2); j++ {
-			if str1[i] == str2[j] {
-				table[i+1][j+1] = table[i][j] + 1
+
+	var longestStr = ""
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if i == 0 || j == 0 {
+				table[i][j] = 0
+			} else if a[i-1] == b[j-1] {
+				table[i][j] = table[i-1][j-1] + 1
+				if len(longestStr) < table[i][j] {
+					longestStr = a[i-table[i][j] : i+1]
+				}
 			} else {
-				table[i+1][j+1] = int(math.Max(float64(table[i+1][j]), float64(table[i][j+1])))
+				table[i][j] = 0
 			}
 		}
 	}
-	var result string
-	for x, y := len(str1), len(str2); x != 0 && y != 0; {
-		if table[x][y] == table[x-1][y] {
-			x--
-		} else if table[x][y] == table[x][y-1] {
-			y--
-		} else {
-			result = string(str1[x-1]) + result
-			x--
-			y--
-		}
-	}
-	return result
-	
+
+	return longestStr
 }
