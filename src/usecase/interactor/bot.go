@@ -2,8 +2,7 @@ package interactor
 
 import (
 	"context"
-	"fmt"
-	"regexp"
+	"math"
 
 	"github.com/joaquinicolas/iris-bot/src/domain/entities"
 	"github.com/joaquinicolas/iris-bot/src/usecase/repository"
@@ -37,20 +36,47 @@ func (bi *botInteractor) GetProductsByTerm(ctx context.Context, term string) ([]
 	if err != nil {
 		return nil, err
 	}
-	if term == "" {
-		return products, nil
-	}
 	return filterByTerm(products, term), nil
 }
 
 func filterByTerm[T entities.Filter](list []T, term string) []T {
-	r, _ := regexp.Compile(fmt.Sprintf("(?i)[a-zA-Z]*\\s*%s\\s*[a-zA-Z]*", term))
 	filtered := make([]T, 0)
 	for _, v := range list {
-		if r.MatchString(v.Tag()) {
+		result := longestCommonSubsequence(v.Tag(), term)
+		if len(result) > 4 {
 			filtered = append(filtered, v)
 		}
 	}
 
 	return filtered
+}
+
+func longestCommonSubsequence(str1, str2 string) string {
+	table := make([][]int, len(str1)+1)
+	for i := range table {
+		table[i] = make([]int, len(str2)+1)
+	}
+	for i := 0; i < len(str1); i++ {
+		for j := 0; j < len(str2); j++ {
+			if str1[i] == str2[j] {
+				table[i+1][j+1] = table[i][j] + 1
+			} else {
+				table[i+1][j+1] = int(math.Max(float64(table[i+1][j]), float64(table[i][j+1])))
+			}
+		}
+	}
+	var result string
+	for x, y := len(str1), len(str2); x != 0 && y != 0; {
+		if table[x][y] == table[x-1][y] {
+			x--
+		} else if table[x][y] == table[x][y-1] {
+			y--
+		} else {
+			result = string(str1[x-1]) + result
+			x--
+			y--
+		}
+	}
+	return result
+	
 }
