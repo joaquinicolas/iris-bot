@@ -1,0 +1,60 @@
+# golangci-lint configuration file https://golangci-lint.run/usage/configuration/ 
+linters-settings:
+  govet:
+    check-shadowing: true
+    enable-all: true
+  golint:
+    min-confidence: 0
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: github.com/joaquinicolas/iris-bot
+  gocyclo:
+    min-complexity: 10
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  lll:
+    line-length: 120
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+    packages:
+      - github.com/sirupsen/logrus
+      - github.com/satori/go.uuid
+      - github.com/gorilla/mux
+      - github.com/gorilla/context
+      - github.com/gorilla/schema
+      - github.com/gorilla/websocket
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/csrf
+      - github.com/gorilla/handlers
+      - github.com/gorilla/sessions
+      - github.com/gorilla/feeds
+      - github.com/gorilla/rpc
+      - github.com/gorilla/rpc/json
+      - github.com/gorilla/rpc/v2
+      - github.com/gorilla/rpc/v2/json2
+      - github.com/gorilla/rpc/v2/xml2
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/websocket
+      - github.com/gorilla/sessions
+      - github.com/gorilla/feeds
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/websocket
+      - github.com/gorilla/sessions
+      - github.com/gorilla/feeds
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/websocket
+      - github.com/gorilla/sessions
+      - github.com/gorilla/feeds
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/websocket
+      - github.com/gorilla/sessions
+      - github.com/gorilla/feeds
+      - github.com/gorilla/securecookie
+      - github.com/gorilla/websocket
