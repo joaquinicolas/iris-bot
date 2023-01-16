@@ -26,7 +26,11 @@ func (r *registry) Bootstrap() {
 	telegramBot := api.NewTelegramBot(os.Getenv("TELEGRAM_TOKEN"))
 	presenter := presenter.NewBotPresenter(context.Background())
 	telegramRouter := api.NewTelegramRouter(telegramBot, service, presenter)
-	telegramBot.Run()
+	err := telegramBot.Run()
+	// TODO: hanldle error
+	if err != nil {
+		panic(err)
+	}
 	telegramRouter.Register()
 }
 

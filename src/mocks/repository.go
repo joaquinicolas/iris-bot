@@ -16,6 +16,7 @@ func NewRepository() *MockRepository  {
 }
 
 func (r *MockRepository) GetProducts(ctx context.Context) ([]entities.Product, error) {
+	// nolint
 	args := r.Called(ctx)
 	return args.Get(0).([]entities.Product), args.Error(1)
 }

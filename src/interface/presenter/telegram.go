@@ -29,8 +29,7 @@ func (*botPresenter) RespondWithProducts(products []entities.Product) (string, i
 
 // RespondWithProducts implements io.Writer
 func (bp *botPresenter) Write(p []byte) (n int, err error) {
-	bp.w.Write(p)
-	return len(p), nil
+	return bp.w.Write(p)
 }
 
 // method to create a new instance of the presenter

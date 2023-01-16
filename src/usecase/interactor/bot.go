@@ -2,8 +2,6 @@ package interactor
 
 import (
 	"context"
-	"fmt"
-	"regexp"
 
 	"github.com/joaquinicolas/iris-bot/src/domain/entities"
 	"github.com/joaquinicolas/iris-bot/src/usecase/repository"
@@ -37,20 +35,45 @@ func (bi *botInteractor) GetProductsByTerm(ctx context.Context, term string) ([]
 	if err != nil {
 		return nil, err
 	}
-	if term == "" {
-		return products, nil
-	}
 	return filterByTerm(products, term), nil
 }
 
 func filterByTerm[T entities.Filter](list []T, term string) []T {
-	r, _ := regexp.Compile(fmt.Sprintf("(?i)[a-zA-Z]*\\s*%s\\s*[a-zA-Z]*", term))
 	filtered := make([]T, 0)
 	for _, v := range list {
-		if r.MatchString(v.Tag()) {
+		result := lcsubStr(v.Tag(), term)
+		if len(result) > 3 {
 			filtered = append(filtered, v)
 		}
 	}
 
 	return filtered
+}
+
+func lcsubStr(a, b string) string {
+	m := len(a)
+	n := len(b)
+
+	table := make([][]int, m+1)
+	for i := range table {
+		table[i] = make([]int, n+1)
+	}
+
+	var longestStr = ""
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if i == 0 || j == 0 {
+				table[i][j] = 0
+			} else if a[i-1] == b[j-1] {
+				table[i][j] = table[i-1][j-1] + 1
+				if len(longestStr) < table[i][j] {
+					longestStr = a[i-table[i][j] : i+1]
+				}
+			} else {
+				table[i][j] = 0
+			}
+		}
+	}
+
+	return longestStr
 }

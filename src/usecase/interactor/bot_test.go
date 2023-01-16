@@ -48,13 +48,20 @@ func Test_GetProducts(t *testing.T) {
 }
 
 func Test_GetProductBySearchTerm(t *testing.T) {
+	// nolint
 	tests := []struct {
-		name     string
-		expected []entities.Product
-		term     string
 		wantErr  bool
+		name     string
+		term     string
+		expected []entities.Product
 	}{
-		{name: "Test_GetProducts ok", wantErr: false, term: "test", expected: []entities.Product{{Id: "4", Name: "test 70GR", Price: "4"}}},
+		{
+			name:    "Test_GetProducts ok",
+			wantErr: false, term: "test",
+			expected: []entities.Product{
+				{Id: "4", Name: "test 70GR", Price: "4"},
+				{Id: "4", Name: "test", Price: "2"},
+				{Id: "4", Name: "test 80GR", Price: "5"}}},
 		{name: "Test_GetProducts get an error", wantErr: true, term: "", expected: nil},
 		{name: "Test_GetProducts get unexpected error", wantErr: true, term: "error", expected: nil},
 	}
@@ -69,7 +76,7 @@ func Test_GetProductBySearchTerm(t *testing.T) {
 			if tt.wantErr {
 				repo.On("GetProducts", ctx).Return(tt.expected, errors.New("got an error")).Once()
 			} else {
-				repo.On("GetProducts", ctx).Return(tt.expected, nil).Once()
+				repo.On("GetProducts", ctx).Return(mocks.MockOkResponse(), nil).Once()
 			}
 			products, err := bot.GetProductsByTerm(ctx, tt.term)
 			if (err != nil) != tt.wantErr {
@@ -77,6 +84,7 @@ func Test_GetProductBySearchTerm(t *testing.T) {
 			}
 
 			assert.ObjectsAreEqualValues(tt.expected, products)
+			assert.Equal(t, len(tt.expected), len(products))
 			for _, v := range products {
 				assert.NotNil(t, v.Id)
 				assert.NotNil(t, v.Name)

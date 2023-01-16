@@ -6,7 +6,7 @@ import (
 
 	"github.com/joaquinicolas/iris-bot/src/domain/entities"
 	"google.golang.org/api/option"
-	"google.golang.org/api/sheets/v4"
+	sheets "google.golang.org/api/sheets/v4"
 )
 
 type Store interface {
@@ -15,8 +15,8 @@ type Store interface {
 }
 
 type GsheetProvider struct {
-	Token   string
 	service *sheets.Service
+	Token   string
 }
 
 func NewGsheetProvider(token string) *GsheetProvider {
