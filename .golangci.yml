@@ -1,5 +1,6 @@
 # golangci-lint configuration file https://golangci-lint.run/usage/configuration/ 
 linters-settings:
+  modules-download-mode: readonly
   govet:
     check-shadowing: true
     enable-all: true

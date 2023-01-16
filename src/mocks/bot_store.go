@@ -16,6 +16,7 @@ func (s *Store) Connect(ctx context.Context) error {
 }
 
 func (s *Store) Get(sheetId string, readRange string) ([]entities.Product, error) {
+	// nolint
 	args := s.Called(sheetId, readRange)
 	return args.Get(0).([]entities.Product), args.Error(1)
 }

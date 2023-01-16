@@ -18,8 +18,8 @@ type SpreadsheetsService struct {
 }
 
 type Service struct {
-	mock.Mock
 	Spreadsheets *SpreadsheetsService
+	mock.Mock
 }
 
 func (ss *SpreadsheetsService) Get(sheetId string, readRange string) *SpreadsheetsValuesGetCall {
@@ -29,6 +29,7 @@ func (ss *SpreadsheetsService) Get(sheetId string, readRange string) *Spreadshee
 	if readRange == "" {
 		return nil
 	}
+	// nolint
 	args := ss.Called(sheetId, readRange)
 	return args.Get(0).(*SpreadsheetsValuesGetCall)
 }

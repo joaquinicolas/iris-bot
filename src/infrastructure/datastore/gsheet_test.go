@@ -48,7 +48,10 @@ func Test_Gsheet_Get(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	gsheet.Connect(ctx)
+	err := gsheet.Connect(ctx)
+	if err != nil {
+		t.Errorf("Gsheet.Connect() error = %v, wantErr %v", err, false)
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resp, err := gsheet.Get(tt.sheetId, tt.readRange)

@@ -1,17 +1,24 @@
-FROM golang:1.17-alpine AS builder
+# FROM golang image
+FROM golang:1.18-bullseye as builder
+WORKDIR /app/github.com/joaquinicolas/iris-bot
 
-WORKDIR /app
 
-RUN apk add --no-cache git curl && \
-    curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b /go/bin v1.42.1
-
-COPY go.mod ./
+COPY go.mod go.sum ./
+COPY src/ ./src
+COPY main.go ./
+COPY .golangci.yml ./
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
+RUN golangci-lint run -v
 RUN go mod download
-COPY *.go ./
-RUN golangci-lint run
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/app
+RUN CGO_ENABLED=0 GOOS=linux go build -o /go/bin/app
 
 FROM scratch
+# Set environment variables
+ENV GSHEET_TOKEN ""
+ENV TELEGRAM_TOKEN ""
+ENV SHEET_ID ""
+ENV SHEET_RANGE ""
+
 WORKDIR /
 COPY --from=builder /go/bin/app /go/bin/app
 EXPOSE 8080

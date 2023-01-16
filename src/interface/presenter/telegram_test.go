@@ -16,12 +16,13 @@ func Test_botPresenter_RespondWithProducts(t *testing.T) {
 	type args struct {
 		products []entities.Product
 	}
+	// nolint
 	tests := []struct {
+		count  int
 		name   string
+		want   string
 		fields fields
 		args   args
-		want   string
-		count  int
 	}{
 		{
 			name:   "respond with products",

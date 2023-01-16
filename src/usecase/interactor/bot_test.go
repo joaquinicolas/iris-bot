@@ -48,11 +48,12 @@ func Test_GetProducts(t *testing.T) {
 }
 
 func Test_GetProductBySearchTerm(t *testing.T) {
+	// nolint
 	tests := []struct {
-		name     string
-		expected []entities.Product
-		term     string
 		wantErr  bool
+		name     string
+		term     string
+		expected []entities.Product
 	}{
 		{
 			name:    "Test_GetProducts ok",

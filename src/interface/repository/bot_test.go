@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/joaquinicolas/iris-bot/src/domain/entities"
-	"github.com/joaquinicolas/iris-bot/src/interface/mocks"
+	"github.com/joaquinicolas/iris-bot/src/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

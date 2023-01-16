@@ -10,8 +10,8 @@ type Bot interface {
 }
 
 type TelegramBot struct {
-	Token string
 	bot   *bt.Bot
+	Token string
 }
 
 func NewTelegramBot(token string) *TelegramBot {
